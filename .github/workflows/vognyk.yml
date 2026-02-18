@@ -1,0 +1,33 @@
+name: Daily Vognyk
+
+on:
+  schedule:
+    - cron: "0 1 * * *"
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Send message
+        env:
+          API_ID: ${{ secrets.API_ID }}
+          API_HASH: ${{ secrets.API_HASH }}
+          SESSION_STRING: ${{ secrets.SESSION_STRING }}
+          DAILY_CHAT_ID: ${{ secrets.DAILY_CHAT_ID }}
+          TIMEZONE: ${{ secrets.TIMEZONE }}
+          TARGET_HOUR: ${{ secrets.TARGET_HOUR }}
+          TARGET_MINUTE: ${{ secrets.TARGET_MINUTE }}
+        run: python send_vognyk.py

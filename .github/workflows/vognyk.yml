@@ -5,6 +5,16 @@ on:
     - cron: "0 1 * * *"
     - cron: "0 2 * * *"
   workflow_dispatch:
+    inputs:
+      message_text:
+        description: "Message to send"
+        required: true
+        default: "соня"
+      force_send:
+        description: "Send immediately, ignore time check"
+        required: true
+        type: boolean
+        default: true
 
 jobs:
   send:
@@ -30,4 +40,6 @@ jobs:
           TIMEZONE: ${{ secrets.TIMEZONE }}
           TARGET_HOUR: ${{ secrets.TARGET_HOUR }}
           TARGET_MINUTE: ${{ secrets.TARGET_MINUTE }}
+          MESSAGE_TEXT: ${{ github.event.inputs.message_text || 'вогник' }}
+          FORCE_SEND: ${{ github.event.inputs.force_send == 'true' && '1' || '0' }}
         run: python send_vognyk.py

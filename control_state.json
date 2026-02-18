@@ -4,8 +4,15 @@
   "daily_chat_id": 986095695,
   "daily_hour": 4,
   "daily_minute": 0,
-  "scheduled": [],
-  "next_id": 1,
-  "last_command_id": 174617,
+  "scheduled": [
+    {
+      "id": 1,
+      "chat_id": 986095695,
+      "text": "соня",
+      "send_at": "2026-02-18T20:29:58.909483+02:00"
+    }
+  ],
+  "next_id": 2,
+  "last_command_id": 174632,
   "last_daily_date": "2026-02-18"
 }

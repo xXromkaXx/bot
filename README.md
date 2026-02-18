@@ -1,12 +1,12 @@
 # telegram-vognyk-bot
 
-Щодня відправляє `вогник` у Telegram-чат о 04:00 (Europe/Kyiv) через GitHub Actions.
+Керується через Telegram-команди в Saved Messages і працює через GitHub Actions (кожні 5 хв).
 
 ## Файли
 
-- `send_vognyk.py` — відправка повідомлення
-- `control_bot.py` — постійно запущений userbot з командами керування
+- `gh_poller.py` — читає команди з control-чату, виконує відкладені/щоденні відправки
 - `.github/workflows/vognyk.yml` — розклад запуску
+- `control_state.json` — стан (вкл/викл, черга, остання оброблена команда)
 - `.env.example` — приклад змінних
 
 ## Налаштування (безкоштовно)
@@ -17,31 +17,17 @@
    - `API_ID`
    - `API_HASH`
    - `SESSION_STRING`
+   - `CONTROL_CHAT_ID` (твій user id, рекомендовано: `1293715368`)
    - `DAILY_CHAT_ID` = `986095695`
    - `TIMEZONE` = `Europe/Kyiv`
-   - `TARGET_HOUR` = `4`
-   - `TARGET_MINUTE` = `0`
 4. У `Actions` запусти workflow `Daily Vognyk` через `Run workflow` для тесту.
 
 ## Важливо
 
-- GitHub Actions не працює посекундно точно; затримка в кілька хвилин можлива.
+- Команди з Telegram обробляються раз на 5 хв (не realtime).
 - Якщо раніше світив `API_HASH` або `SESSION_STRING`, обов'язково перевипусти їх.
 
-## Команди для `control_bot.py`
-
-Запуск:
-
-```bash
-cd "/Users/romka/Documents/New project/telegram-vognyk-bot"
-source ../.venv/bin/activate
-set -a; source ../.env; set +a
-python -u control_bot.py
-```
-
-Потрібна змінна `CONTROL_CHAT_ID` у `../.env` (це чат "Збережене", який ти вже визначив).
-
-Команди (писати в control-чаті):
+## Команди (писати в Saved Messages)
 
 - `/help`
 - `/sending on|off|status` — глобально вмикає/вимикає відправку

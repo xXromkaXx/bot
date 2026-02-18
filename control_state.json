@@ -1,0 +1,11 @@
+{
+  "sending_enabled": true,
+  "daily_enabled": true,
+  "daily_chat_id": 986095695,
+  "daily_hour": 4,
+  "daily_minute": 0,
+  "scheduled": [],
+  "next_id": 1,
+  "last_command_id": 0,
+  "last_daily_date": ""
+}

@@ -2,26 +2,20 @@ name: Daily Vognyk
 
 on:
   schedule:
-    - cron: "0 1 * * *"
-    - cron: "0 2 * * *"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
-    inputs:
-      message_text:
-        description: "Message to send"
-        required: true
-        default: "соня"
-      force_send:
-        description: "Send immediately, ignore time check"
-        required: true
-        type: boolean
-        default: true
+
+permissions:
+  contents: write
 
 jobs:
-  send:
+  poll-and-send:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -31,15 +25,28 @@ jobs:
       - name: Install deps
         run: pip install -r requirements.txt
 
-      - name: Send message
+      - name: Poll commands and send messages
         env:
           API_ID: ${{ secrets.API_ID }}
           API_HASH: ${{ secrets.API_HASH }}
           SESSION_STRING: ${{ secrets.SESSION_STRING }}
+          CONTROL_CHAT_ID: ${{ secrets.CONTROL_CHAT_ID }}
           DAILY_CHAT_ID: ${{ secrets.DAILY_CHAT_ID }}
           TIMEZONE: ${{ secrets.TIMEZONE }}
-          TARGET_HOUR: ${{ secrets.TARGET_HOUR }}
-          TARGET_MINUTE: ${{ secrets.TARGET_MINUTE }}
-          MESSAGE_TEXT: ${{ github.event.inputs.message_text || 'вогник' }}
-          FORCE_SEND: ${{ github.event.inputs.force_send == 'true' && '1' || '0' }}
-        run: python send_vognyk.py
+        run: python gh_poller.py
+
+      - name: Commit state
+        run: |
+          if [ -f control_state.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add control_state.json
+            if ! git diff --cached --quiet; then
+              git commit -m "chore: update control state [skip ci]"
+              git push
+            else
+              echo "No state changes to commit"
+            fi
+          else
+            echo "control_state.json not found"
+          fi

@@ -6,13 +6,13 @@
   "daily_minute": 0,
   "scheduled": [
     {
-      "id": 1,
+      "id": 2,
       "chat_id": 986095695,
       "text": "соня",
-      "send_at": "2026-02-18T20:29:58.909483+02:00"
+      "send_at": "2026-02-18T21:30:50.556629+02:00"
     }
   ],
-  "next_id": 2,
-  "last_command_id": 174632,
+  "next_id": 3,
+  "last_command_id": 174642,
   "last_daily_date": "2026-02-18"
 }
